@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -155,7 +156,7 @@ public class ArticleController {
 	 */
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 	@ResponseBody
-	public String uploadArticle(Article article, MultipartFile imgFile, HttpServletRequest request, HttpServletResponse response) {
+	public String uploadArticle(MultipartFile imgFile, Article article, HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");		
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		// 上传图片，并将文章插入到数据库

@@ -10,6 +10,7 @@
 		<result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="typeName" property="typeName" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="ResultMapWithBLOBs" type="Article" extends="BaseResultMap">
 		<result column="content" property="content" jdbcType="LONGVARCHAR" />
@@ -37,9 +38,9 @@
 	</delete>
 
 	<insert id="insertArticle">
-		insert into b_article(type, title, icon_address,
+		insert into b_article(type, title, icon_address,update_time,
 		content)
-		values(#{type},#{title},#{iconAddress},#{content})
+		values(#{type},#{title},#{iconAddress},#{updateTime},#{content})
 	</insert>
 
 	<sql id="order_sql">
@@ -60,7 +61,7 @@
 	</sql>
 	<select id="selectArticleListByPageInfo" parameterType="PageInfo"
 		resultMap="BaseResultMap">
-		select t1.id, t2.name as type, title, icon_address, audit,
+		select t1.id,t1.type, t2.name as typeName, title, icon_address, audit,
 		upload_time,
 		update_time, audit_time from b_article
 		t1,b_article_sub_type t2
@@ -100,5 +101,15 @@
 		select content from b_article where id=#{id}
 	</select>
 
+	<update id="updateArticle" parameterType="Article">
 
+		update b_article
+		<trim prefix="set" suffixOverrides="," suffix="WHERE id = #{id}">
+			<if test="true">type=#{type},title=#{title},</if>
+			<if test="content != null">content=#{content},</if>
+			<if test="iconAddress != null">icon_address=#{iconAddress},</if>
+			<if test="audit != null">audit=#{audit},audit_time=#{auditTime},</if>
+			<if test="updateTime != null ">update_time=#{updateTime},</if>
+		</trim>
+	</update>
 </mapper>

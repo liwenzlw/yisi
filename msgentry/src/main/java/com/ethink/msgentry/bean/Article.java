@@ -12,13 +12,15 @@ public class Article {
 	
 	private Integer id;
 
-	private String type;
+	private Integer type;
 
+	private String typeName;
+	
 	private String title;
 
 	private String iconAddress;
 
-	private Boolean audit;
+	private Integer audit;
 
 	private Date uploadTime;
 
@@ -36,12 +38,20 @@ public class Article {
 		this.id = id;
 	}
 
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	public String getTitle() {
@@ -60,11 +70,11 @@ public class Article {
 		this.iconAddress = iconAddress == null ? null : iconAddress.trim();
 	}
 
-	public Boolean getAudit() {
+	public Integer getAudit() {
 		return audit;
 	}
 
-	public void setAudit(Boolean audit) {
+	public void setAudit(Integer audit) {
 		this.audit = audit;
 	}
 

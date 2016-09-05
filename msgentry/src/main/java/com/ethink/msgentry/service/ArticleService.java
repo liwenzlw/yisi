@@ -26,4 +26,6 @@ public interface ArticleService {
 	List<ArticleSubType> getSubTypeByRootType(int rootTypeId);
 
 	String queryArticleByTypeInPage(PageInfo pageInfo, String basePath, int type);
+
+	Boolean updateArticle(Article article, MultipartFile imgFile, String realPath);
 }

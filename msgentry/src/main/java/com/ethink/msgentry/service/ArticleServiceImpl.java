@@ -141,4 +141,14 @@ public class ArticleServiceImpl implements ArticleService {
 		return retdata;
 	}
 
+	@Override
+	public Boolean updateArticle(Article article, MultipartFile imgFile, String realPath) {
+		//1.如果imgFile不为空则修改图片
+		if(!imgFile.isEmpty()) {
+			String iconAddress = UploadFileUtil.saveImage(imgFile, realPath);
+			article.setIconAddress(iconAddress);
+		}
+		int count = articleDao.updateArticle(article);
+		return count == 0 ? false : true;
+	}
 }

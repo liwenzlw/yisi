@@ -23,4 +23,6 @@ public interface ArticleDao {
 	String selectContentById(int id);
 
 	List<Article> selectArticleListByTypeInPage(Map<String, Object> params);
+
+	int updateArticle(Article article);
 }

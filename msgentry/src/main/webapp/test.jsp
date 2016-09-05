@@ -12,9 +12,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="msgOperation/selectById">
-		<span>id:</span><input type='text' name="id">
-		<input type="submit" value="提交" />
-	</form>
+	<form action="article" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="PUT" /> 
+        <input type="submit" value="PUT请求" />
+    </form><br/>
+
 </body>
 </html>
