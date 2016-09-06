@@ -219,4 +219,10 @@ public class ArticleServiceImpl implements ArticleService {
 		String retdata = JSON.toJSONStringWithDateFormat(json, "yyyy:MM:dd");
 		return retdata;
 	}
+
+	@Override
+	public Article getArticleDetailsById(int id) {
+		Article article = articleDao.getArticleDetailsById(id);
+		return article;
+	}
 }

@@ -34,4 +34,6 @@ public interface ArticleDao {
 	int getRecordsInATopType(int topType);
 
 	List<Article> getArticleListByTopTypeInPageByParams(Map<String, Object> params);
+
+	Article getArticleDetailsById(int id);
 }

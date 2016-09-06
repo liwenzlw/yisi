@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 
 <%
 	String basepath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -181,15 +182,16 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                 },
                 {label: '二级类型', name: 'subType', width: 150, editable: true,edittype:'select',hidden:true,editrules:{edithidden:true},editoptions:{ value:"0:NULL" }},
                 {label: '二级类型', name: 'subTypeName', width: 150},
-                {label: '审核', name: 'audit', width: 80, editable: true, edittype:"checkbox",editoptions:{ value:"1:9" }},
+                {label: '审核', name: 'audit', width: 80,  edittype:"checkbox",editoptions:{ value:"1:9" }
+	                <%--使用empty运算符检查对象是否为null(空) --%>
+	                ${isAdmin==true? ",editable: true" : ",editable: false"}
+	          	},
+               
                 {
                     label: '图标', name: 'iconAddress', width: 150, editable: true, edittype: 'file',formatter:imageFormat, unformat:imageUnFormat,
                     editoptions: { 
                     	
                     	dataInit : function (elem) { 
-	                    	console.group("elem");
-	                    	console.log(elem);
-	                    	console.groupEnd();
 	                    	$("<img id='editImg' class='iconImg' src='" + jQuery("#jqGrid").jqGrid('getCell',$(elem).attr('rowid'), $(elem).attr('name')) + "'/>").insertBefore($(elem));
 	                    	$(elem).attr('name','imgFile');
                     	},

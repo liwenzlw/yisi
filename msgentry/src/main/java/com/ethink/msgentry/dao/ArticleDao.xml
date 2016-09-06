@@ -3,21 +3,21 @@
 <mapper namespace="com.ethink.msgentry.dao.ArticleDao">
 	<resultMap id="BaseResultMap" type="Article">
 		<id column="id" property="id" jdbcType="INTEGER" />
-		
+
 		<result column="sub_type" property="subType" jdbcType="INTEGER" />
 		<result column="subTypeName" property="subTypeName" jdbcType="VARCHAR" />
 		<result column="top_type" property="topType" jdbcType="INTEGER" />
 		<result column="topTypeName" property="topTypeName" jdbcType="VARCHAR" />
-		
+
 		<result column="title" property="title" jdbcType="VARCHAR" />
 		<result column="icon_address" property="iconAddress" jdbcType="VARCHAR" />
 		<result column="address" property="address" jdbcType="VARCHAR" />
 		<result column="phone" property="phone" jdbcType="VARCHAR" />
-		
+
 		<result column="start_time" property="startTime" jdbcType="TIME" />
 		<result column="end_time" property="endTime" jdbcType="TIME" />
 		<result column="audit" property="audit" jdbcType="BIT" />
-		
+
 		<result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
@@ -26,19 +26,19 @@
 	<resultMap id="ResultMapWithBLOBs" type="Article" extends="BaseResultMap">
 		<result column="content" property="content" jdbcType="LONGVARCHAR" />
 	</resultMap>
-	
+
 	<sql id="order_sql">
 		<choose>
 			<when test="'subType' == sidx"> sub_type </when>
 			<when test="'topType' == sidx"> top_type </when>
-			
+
 			<when test="'title' == sidx"> title </when>
 			<when test="'iconAddress' == sidx"> icon_address </when>
 			<when test="'address' == sidx"> address </when>
 			<when test="'phone' == sidx"> phone </when>
 			<when test="'startTime' == sidx"> start_time </when>
 			<when test="'endTime' == sidx"> end_time </when>
-			
+
 			<when test="'audit' == sidx"> audit </when>
 			<when test="'uploadTime' == sidx"> upload_time </when>
 			<when test="'updateTime' == sidx"> update_time </when>
@@ -52,71 +52,92 @@
 		</choose>
 	</sql>
 
+	<!-- 通过主键删除文章 -->
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from
 		b_article
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 
+	<!-- 插入文字 -->
 	<insert id="insertArticle">
-		insert into b_article(sub_type,top_type, title, icon_address,address,phone,start_time,end_time,update_time,show_time,
+		insert into b_article(sub_type,top_type, title,
+		icon_address,address,phone,start_time,end_time,update_time,show_time,
 		content)
-		values(#{subType},#{topType},#{title},#{iconAddress},#{address},#{phone},TIME_FORMAT(#{startTime},'%h:%i'),TIME_FORMAT(#{endTime},'%h:%i'),#{updateTime},str_to_date(#{showTime}, '%Y-%m-%d'),#{content})
+		values(#{subType},#{topType},#{title},#{iconAddress},#{address},#{phone},TIME_FORMAT(#{startTime},'%h:%i'),
+		TIME_FORMAT(#{endTime},'%h:%i'),#{updateTime},str_to_date(#{showTime},'%Y-%m-%d'),#{content})
 	</insert>
 
-	
+
 	<!-- 根据分页信息查询文章信息（不包括content） -->
 	<select id="selectArticleListByPageInfo" parameterType="PageInfo"
 		resultMap="BaseResultMap">
-		select t1.id,t1.sub_type,t1.top_type,t1.title,t1.icon_address,t1.address,t1.phone,t1.start_time,
+		select
+		t1.id,t1.sub_type,t1.top_type,t1.title,t1.icon_address,t1.address,t1.phone,t1.start_time,
 		t1.end_time,t1.audit,t1.upload_time,t1.update_time,t1.audit_time,t1.show_time,
 		t2.name as subTypeName, t3.name as topTypeName
 		from b_article
 		t1,b_article_sub_type t2,b_article_top_type t3
-		where t1.sub_type = t2.id and t1.top_type=t3.id
+		where t1.sub_type =
+		t2.id and t1.top_type=t3.id
 		order by
 		<include refid="order_sql"></include>
 		limit
 		#{startIndex},#{endIndex}
 	</select>
-	
+
 	<!-- 根据二级类型查询文章列表（包括id,title,icon_address,show_time） -->
-	<select id="getArticleListBySubTypeInPageByParams" parameterType="java.util.Map"
-		resultMap="BaseResultMap">
-		
+	<select id="getArticleListBySubTypeInPageByParams"
+		parameterType="java.util.Map" resultMap="BaseResultMap">
+
 		select id,title,icon_address,show_time
 		from b_article
-		where sub_type = ${subType}
+		where sub_type =
+		${subType}
 		order by
 		<include refid="order_sql"></include>
 		limit
 		#{startIndex},#{endIndex}
 	</select>
 	<!-- 根据顶级类型查询文章列表（包括id,title,icon_address,show_time） -->
-	<select id="getArticleListByTopTypeInPageByParams" parameterType="java.util.Map"
-		resultMap="BaseResultMap">
-		
+	<select id="getArticleListByTopTypeInPageByParams"
+		parameterType="java.util.Map" resultMap="BaseResultMap">
+
 		select id,title,icon_address,show_time
 		from b_article
-		where top_type = ${topType}
+		where top_type =
+		${topType}
 		order by
 		<include refid="order_sql"></include>
 		limit
 		#{startIndex},#{endIndex}
 	</select>
+	<!-- 根据id查询文章详细信息（包括id,title,show_time,content,address,phone,start_time,end_time） -->
+	<select id="getArticleDetailsById"
+		parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
 
+		select
+		id,title,show_time,content,address,phone,start_time,end_time
+		from
+		b_article
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 获取所有的文字的总数 -->
 	<select id="getRecords" resultType="java.lang.Integer">
 		select count(1) from
 		b_article;
 	</select>
 	<!-- 查询该二级分类的总文章数 -->
 	<select id="getRecordsInASubType" resultType="java.lang.Integer">
-		select count(1) from
+		select count(1)
+		from
 		b_article where sub_type=#{subType};
 	</select>
 	<!-- 查询该顶级分类的总文章数 -->
 	<select id="getRecordsInATopType" resultType="java.lang.Integer">
-		select count(1) from
+		select count(1)
+		from
 		b_article where top_type=#{topType};
 	</select>
 
@@ -126,6 +147,7 @@
 		select content from b_article where id=#{id}
 	</select>
 
+	<!-- 更新文章信息 -->
 	<update id="updateArticle" parameterType="Article">
 		update b_article
 		<trim prefix="set" suffixOverrides="," suffix="WHERE id = #{id}">
@@ -135,7 +157,7 @@
 			<if test="iconAddress != null">icon_address=#{iconAddress},</if>
 			<if test="phone != null ">phone=#{phone},</if>
 			<if test="address != null ">address=#{address},</if>
-			
+
 			<if test="startTime != null">start_time=TIME_FORMAT(#{startTime},'%h:%i'),</if>
 			<if test="endTime != null">end_time=TIME_FORMAT(#{endTime},'%h:%i'),</if>
 			<if test="showTime != null ">show_time=str_to_date(#{showTime}, '%Y-%m-%d'),</if>

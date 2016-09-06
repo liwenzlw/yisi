@@ -23,22 +23,16 @@ body {
 			<div class="panel-heading">
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs" id="maintab">
-					<li class="active"><a href="#home"
-						onclick='showPage("home","")'>Home</a></li>
-					<li><a href="#uploadArticle"
-						onclick='showPage("uploadArticle","<%=basepath%>uploadArticle.jsp")'>录入数据</a></li>
 					<li><a href="#editArticle"
-						onclick='showPage("editArticle","<%=basepath%>editArticle.jsp")'>编辑数据</a></li>
-					<li><a href="#settings" onclick='showPage("settings","")'>修改密码</a></li>
+						onclick='showPage("editArticle","<%=basepath%>getEidtPage")'>编辑数据</a></li>
+					<li><a href="#settings" onclick='showPage("settings","")'>用户中心</a></li>
 				</ul>
 			</div>
 			<div class="panel-body">
 				<!-- Tab panes -->
 				<div class="tab-content">
-					<div class="tab-pane active" id="home">12111111111</div>
-					<div class="tab-pane" id="uploadArticle"></div>
 					<div class="tab-pane" id="editArticle" style="text-align: center;"></div>
-					<div class="tab-pane" id="settings">4444444444444</div>
+					<div class="tab-pane" id="settings"></div>
 				</div>
 			</div>
 		</div>
@@ -54,6 +48,7 @@ body {
 	href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <link rel="stylesheet" type="text/css" media="screen"
 	href="<%=basepath%>vender/jqGrid/css/ui.jqgrid-bootstrap.css" />
+	
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.ethink.msgentry.bean.Article;
 import com.ethink.msgentry.bean.ArticleSubType;
 import com.ethink.msgentry.bean.ArticleTopType;
@@ -102,6 +103,8 @@ public class ArticleControllerRest {
 	 * 
 	 * @param id
 	 * @return
+	 * 
+	 * @deprecated
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/type/getSiblings")
@@ -221,6 +224,23 @@ public class ArticleControllerRest {
 		+ request.getContextPath() + "/";
 		String data = articleService.queryArticleListByTopTypeAndPage(pageInfo, basePath, topType);
 		return data;
+	}
+	
+	/**
+	 * 通过文章的主键获取文章的详细信息
+	 * 
+	 * @param id
+	 *            文章的主键
+	 * @param response
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/article/getArticleDetailsById") // ,method=RequestMethod.POST
+	public String getArticleDetailsById(int id, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("text/html;charset=utf-8");
+		
+		Article article = articleService.getArticleDetailsById(id);
+		return JSON.toJSONString(article);
 	}
 
 }

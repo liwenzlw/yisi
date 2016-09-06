@@ -34,5 +34,12 @@ public interface ArticleService {
 	String queryArticleListBySubTypeAndPage(PageInfo pageInfo, String basePath, int subType);
 
 	String queryArticleListByTopTypeAndPage(PageInfo pageInfo, String basePath, int topType);
+	
+	/**
+	 * 通过id获取文章界面的详细信息
+	 * @param id
+	 * @return
+	 */
+	Article getArticleDetailsById(int id);
 
 }

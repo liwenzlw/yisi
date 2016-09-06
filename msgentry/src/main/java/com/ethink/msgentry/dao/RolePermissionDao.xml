@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ethink.msgentry.dao.RolePermissionDao" >
-  <resultMap id="BaseResultMap" type="com.ethink.msgentry.bean.RolePermission" >
+  <resultMap id="BaseResultMap" type="RolePermission" >
     <id column="permission" property="permission" jdbcType="INTEGER" />
     <id column="role" property="role" jdbcType="INTEGER" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="com.ethink.msgentry.bean.RolePermission" >
+  <delete id="deleteByPrimaryKey" parameterType="RolePermission" >
     delete from b_role_permission
-    where permission = #{permission,jdbcType=INTEGER}
-      and role = #{role,jdbcType=INTEGER}
+    where b_permission = #{permission,jdbcType=INTEGER}
+      and b_role = #{role,jdbcType=INTEGER}
   </delete>
 </mapper>
