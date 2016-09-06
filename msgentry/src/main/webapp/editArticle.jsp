@@ -16,7 +16,7 @@
 
 
 <script>
-    $.jgrid.defaults.width = 900;
+    $.jgrid.defaults.width = 1100;
     $.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 </script>
@@ -39,11 +39,19 @@ function onIFrameLoaded(iframe) {
     var doc = iframe.contentWindow.document;
     var html = doc.body.innerHTML;
     if (html != '') {
-        alert(html);
+    		if(html == 'true') {
+    			console.group('onIFrameLoaded');
+    			$('#cData').trigger('click');
+        		jQuery("#jqGrid").trigger("reloadGrid"); 
+        		console.groupEnd();
+    		} else {
+    			alert(html);
+    		}
     }
 }
 </script>
-<iframe name="backinfocontainer" style="display:none" onload='onIFrameLoaded(this)'></iframe>
+<iframe id='backinfocontainer' name="backinfocontainer"
+	style="display: none" onload='onIFrameLoaded(this)'></iframe>
 
 <style>
 .iconImg {
@@ -87,19 +95,94 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
 		var imageUnFormat = function( cellvalue, options, cell){
 			return $('img', cell).attr('src');
 		};
+		
+		//委托档topSelector改变时级联更新subSelecotr
+		 var delegateUpdateSubSelector =  function (){
+		    	//委托当一级分类改变时级联更新二级分类
+		    	$(document).delegate('#topType','change',function(event){
+					var value = $(this).val();
+					$.ajax({
+						url:"<%=basepath%>type/getSubTypeByTopType",
+						type: "POST",
+						data:{
+							id:value
+						},
+						dataType: "json",
+						success : function(data){
+							var subSelectorOptions = "";
+							if($.isEmptyObject(data)) {
+								subSelectorOptions = "<option value='0'>NULL</option>";
+							} else {
+								$.each(data,function(i,n) {
+		            				subSelectorOptions += "<option value='"+n.id+"'>"+n.name+"</option>";
+		            			});
+							}
+							$("#subType").html(subSelectorOptions);
+						},
+					});
+				});
+		    };
+		    //编辑Form框显示后
+		 var afterShowFormForEdit = function (formid) {
+		    	
+		    	var rowId = $("#id",formid).val();
+		    	var topType = jQuery("#jqGrid").jqGrid('getCell', rowId,'topType');
+		    	var subType = jQuery("#jqGrid").jqGrid('getCell', rowId,'subType');
+		    	
+		    	//编辑模块加载二级类型下拉框
+		    	$.ajax({
+					url:"<%=basepath%>type/getSubTypeByTopType",
+					type: "POST",
+					data:{
+						id:topType
+					},
+					dataType: "json",
+					success : function(data){
+						var subSelectorOptions = "";
+						if($.isEmptyObject(data)) {
+							subSelectorOptions = "<option value='0'>NULL</option>";
+						} else {
+							$.each(data,function(i,n) {
+		        				subSelectorOptions += "<option value='"+n.id+"'>"+n.name+"</option>";
+		        			});
+						}
+		    			$("#subType").html(subSelectorOptions).val(subType);
+					},
+				});
+		    	delegateUpdateSubSelector();
+		    };
+		  
+		    
         $("#jqGrid").jqGrid({
-            url: '<%=basepath%>foodArticle/queryArticleByPage',
+            url: '<%=basepath%>article/queryArticleByPage',
             mtype: "POST",
             datatype: "json",
             colModel: [
                 {
-                    label: '编号', name: 'id', key: true, width: 75, editable: true, editrules: {required: true}
+                    label: '编号', name: 'id', key: true, width: 75,editable: true,hidden:true,editoptions:{defaultValue:"-1"}, editrules: {required: true}
                 },
                 {label: '文章标题', name: 'title', width: 150, editable: true},
-                {label: '类型', name: 'type', width: 150, editable: true},
-                {label: '类型名', name: 'typeName', width: 150, editable: true},
-               {label: '审核', name: 'audit', width: 150, editable: true},
-               {
+                {label: '一级类型', name: 'topTypeName',width: 150},
+                {label: '一级类型', name: 'topType', width: 150, editable: true,edittype:'select', hidden:true,editrules:{edithidden:true},
+                	editoptions:{
+                		defaultValue:"旅游",
+                		dataUrl:"<%=basepath%>type/getTopType",
+                		buildSelect : function (response){
+                			//构造一级类型下拉框
+                			var data = JSON.parse(response);
+                			var selector = "<select id='topType'>";
+                			$.each(data,function(i,n) {
+                					selector += "<option value='"+n.id+"'>"+n.name+"</option>";
+                			});
+                			selector += "</select>"
+                			return selector;
+                		}
+                	} 
+                },
+                {label: '二级类型', name: 'subType', width: 150, editable: true,edittype:'select',hidden:true,editrules:{edithidden:true},editoptions:{ value:"0:NULL" }},
+                {label: '二级类型', name: 'subTypeName', width: 150},
+                {label: '审核', name: 'audit', width: 80, editable: true, edittype:"checkbox",editoptions:{ value:"1:9" }},
+                {
                     label: '图标', name: 'iconAddress', width: 150, editable: true, edittype: 'file',formatter:imageFormat, unformat:imageUnFormat,
                     editoptions: { 
                     	
@@ -139,10 +222,16 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                     	              ] 
                     }
                 },
+                {label: '开始营业时间', name: 'startTime', width: 150,editable: true,edittype: 'input',editrules:{time:true}},
+                {label: '结束营业时间', name: 'endTime', width: 150,editable: true,edittype: 'input',editrules:{time:true}},
+                {label: '文章显示时间', name: 'showTime', width: 150,editable: true,edittype: 'input',editrules:{date:true}},
+                {label: '地址', name: 'address', width: 150,editable: true,edittype: 'input'},
+                {label: '电话', name: 'phone', width: 150,editable: true,edittype: 'input'},
+                {label: '审核时间', name: 'auditTime', width: 150},
                 {label: '上传时间', name: 'uploadTime', width: 150},
                 {label: '最近修改时间', name: 'updateTime', width: 150},
-                {label: '审核时间', name: 'auditTime', width: 150},
-                {label: '文章内容', name: 'content', width: 150, editable: true,edittype: 'input',editoptions: { 
+                {label: '文章内容', name: 'content', width: 150, hidden:true,editable: true,edittype: 'input',editrules:{edithidden:true},editoptions: { 
+                	
                 	dataInit : function (elem) { 
                     	console.group("elem");
                     	console.log(elem);
@@ -178,23 +267,23 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                     editCaption: "The Edit Dialog",
                     width:800,
                     jqModal:false,
-                    drag:false,
+                    drag:true,
+                    url:"<%=basepath%>#",
                     recreateForm: true,
-                    checkOnUpdate: true,
-                    checkOnSubmit: true,
+                    checkOnUpdate: false,
+                    checkOnSubmit: false,
+                    closeAfterEdit:true,
                     beforeSubmit : function(postdata, formid) { 
                     	//阻止默认提交方式，使用表单提交
-                    	console.group('formid');
-                    	console.log(formid);
+                    	postdata = {};
                     	$('#hideContent').val(editor.getContent());
-                    	$(formid).append("<input type='hidden' name='_method' value='PUT' />");
-                    	$(formid).prop('enctype','multipart/form-data').prop('method','post').prop('target','backinfocontainer').removeAttr('onSubmit').prop('action','<%=basepath%>article').submit();
-                    	console.groupEnd();
-                    	
-                    	return[false,""]; 
+                    	$(formid).prop('enctype','multipart/form-data').prop('method','post').prop('target','backinfocontainer').removeAttr('onSubmit').prop('action','<%=basepath%>article/edit').submit();
+                    	return[true,""]; 
                     },
+                    afterShowForm :  afterShowFormForEdit,
                     onClose : function(){
                     	//将ueditor保存到body中
+                    	//debugger;
                     	$('#ueditorContainer').css('display','none').appendTo($(document.body));
                     	return true;
                     },
@@ -206,24 +295,24 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                 {
                 	editCaption: "The Add Dialog",
                     width:800,
-                    height:'auto',
+                    jqModal:false,
                     drag:true,
-                    url:"<%=basepath%>article",
+                    url:"<%=basepath%>#",
                     recreateForm: true,
-                    checkOnUpdate: true,
-                    checkOnSubmit: true,
+                    checkOnUpdate: false,
+                    checkOnSubmit: false,
+                    closeAfterEdit:true,
                     beforeSubmit : function(postdata, formid) { 
+                    	postdata = {};
                     	//阻止默认提交方式，使用表单提交
-                    	console.group('formid');
-                    	console.log(formid);
                     	$('#hideContent').val(editor.getContent());
-                    	$(formid).prop('enctype','multipart/form-data').prop('method','post').prop('target','backinfocontainer').removeAttr('onSubmit').prop('action','<%=basepath%>article').submit();
-                    	console.groupEnd();
-                    	
-                    	return[false,""]; 
+                    	$(formid).prop('enctype','multipart/form-data').prop('method','post').prop('target','backinfocontainer').removeAttr('onSubmit').prop('action','<%=basepath%>article/add').submit();
+                    	return[true,""]; 
                     },
+                    afterShowForm :  delegateUpdateSubSelector,
                     onClose : function(){
                     	//将ueditor保存到body中
+                    	//debugger;
                     	$('#ueditorContainer').css('display','none').appendTo($(document.body));
                     	return true;
                     },
@@ -237,16 +326,13 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                     msg: "是否确认删除文章?",
                     bSubmit: "删除",
                     bCancel: "取消",
-                    url : "<%=basepath%>foodArticle/queryArticleByPage",
-					mtype : "POST",
-					delData : {
-						_method : "DELETE"
-					},
-					errorTextFormat : function(data) {
-						return 'Error: '
-								+ data.responseText
-					}
-				});
-		});
+                    url : "<%=basepath%>/article/del",
+											mtype : "POST",
+											errorTextFormat : function(data) {
+												return 'Error: '
+														+ data.responseText
+											}
+										});
+					});
 </script>
 <!-- jqgrid end -->

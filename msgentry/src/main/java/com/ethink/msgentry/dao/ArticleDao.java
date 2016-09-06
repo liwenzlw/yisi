@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ethink.msgentry.bean.Article;
+import com.ethink.msgentry.bean.ArticleSubType;
 import com.ethink.msgentry.bean.PageInfo;
 
 public interface ArticleDao {
@@ -25,4 +26,12 @@ public interface ArticleDao {
 	List<Article> selectArticleListByTypeInPage(Map<String, Object> params);
 
 	int updateArticle(Article article);
+
+	List<Article> getArticleListBySubTypeInPageByParams(Map<String, Object> params);
+
+	int getRecordsInASubType(int subType);
+
+	int getRecordsInATopType(int topType);
+
+	List<Article> getArticleListByTopTypeInPageByParams(Map<String, Object> params);
 }

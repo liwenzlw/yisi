@@ -10,4 +10,6 @@ public interface ArticleSubTypeDao {
     ArticleSubType selectByPrimaryKey(Integer id);
 
 	List<ArticleSubType> selectByPtype(int rootTypeId);
+
+	List<ArticleSubType> getSiblingsById(int id);
 }

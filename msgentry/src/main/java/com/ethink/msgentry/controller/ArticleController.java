@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
 import com.ethink.msgentry.bean.Article;
-import com.ethink.msgentry.bean.ArticleRootType;
+import com.ethink.msgentry.bean.ArticleTopType;
 import com.ethink.msgentry.bean.ArticleSubType;
 import com.ethink.msgentry.bean.PageInfo;
 import com.ethink.msgentry.service.ArticleService;
@@ -42,7 +42,7 @@ public class ArticleController {
 	 * @param pageInfo
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/queryArticleByTypeInPage", produces = "application/json; charset=utf-8")
 	public String queryArticleByTypeInPage(String callback, int type, PageInfo pageInfo, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -51,7 +51,7 @@ public class ArticleController {
 				+ request.getContextPath() + "/";
 		String data = articleService.queryArticleByTypeInPage(pageInfo, basePath, type);
 		return data;
-	}
+	}*/
 
 	/**
 	 * 根据顶层类型查询子类型
@@ -59,26 +59,26 @@ public class ArticleController {
 	 * @param id
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/getSubTypeByRootType")
+	/*@ResponseBody
+	@RequestMapping(value = "/getSubTypeByTopType")
 	public List<ArticleSubType> querySubTypeByRootType(int id,HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		List<ArticleSubType> subTypes = articleService.getSubTypeByRootType(id);
 		return subTypes;
-	}
+	}*/
 
 	/**
 	 * 获取所有的顶层类型
 	 * 
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/getRootType")
-	public List<ArticleRootType> queryRootType(HttpServletResponse response) {
+	public List<ArticleTopType> queryRootType(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		List<ArticleRootType> rootTypes = articleService.getRootType();
+		List<ArticleTopType> rootTypes = articleService.getRootType();
 		return rootTypes;
-	}
+	}*/
 
 	/**
 	 * 通过文章的主键获取文章的内容
@@ -87,7 +87,7 @@ public class ArticleController {
 	 *            文章的主键
 	 * @param response
 	 */
-	@RequestMapping(value = "/getContentById") // ,method=RequestMethod.POST
+	/*@RequestMapping(value = "/getContentById") // ,method=RequestMethod.POST
 	public void getContentById(int id, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html;charset=utf-8");
@@ -106,7 +106,7 @@ public class ArticleController {
 		} finally {
 			out.close();
 		}
-	}
+	}*/
 
 	/**
 	 * 根据文章的主键删除文章
@@ -117,13 +117,13 @@ public class ArticleController {
 	 *            文章主键
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/queryArticleByPage", method = RequestMethod.DELETE)
 	public String deleteArticle(HttpServletRequest request, HttpServletResponse response, int id) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		boolean ret = articleService.removeArticle(id);
 		return ret ? "删除成功" : "删除失败";
-	}
+	}*/
 
 	/**
 	 * 根据分页信息查询数据
@@ -132,7 +132,7 @@ public class ArticleController {
 	 * @param pageInfo
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/queryArticleByPage", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public String queryArticleByPage(String callback, PageInfo pageInfo, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -144,7 +144,7 @@ public class ArticleController {
 			data = callback + "(" + data + ")";
 		}
 		return data;
-	}
+	}*/
 
 	/**
 	 * 上传文章
@@ -154,7 +154,7 @@ public class ArticleController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "upload", method = RequestMethod.POST)
+	/*@RequestMapping(value = "upload", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadArticle(MultipartFile imgFile, Article article, HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");		
@@ -163,7 +163,7 @@ public class ArticleController {
 		Boolean result = articleService.insertArticle(article, imgFile, realPath);
 
 		return String.valueOf(result);
-	}
+	}*/
 
 	/**
 	 * 文件过大处理
@@ -172,12 +172,12 @@ public class ArticleController {
 	 * @param e
 	 * @return
 	 */
-	@ExceptionHandler
+	/*@ExceptionHandler
 	public String HandelException(HttpServletRequest request, Exception e) {
 		if (e instanceof MaxUploadSizeExceededException) {
 			return "文件超出最大范围";
 		}
 		return null;
-	}
+	}*/
 
 }

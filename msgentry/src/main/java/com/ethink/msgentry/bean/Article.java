@@ -1,5 +1,6 @@
 package com.ethink.msgentry.bean;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -9,16 +10,28 @@ import java.util.Date;
  * @version 1.0
  */
 public class Article {
-	
+
 	private Integer id;
 
-	private Integer type;
+	private Integer subType;
+	private String subTypeName;
 
-	private String typeName;
-	
+	private Integer topType;
+	private String topTypeName;
+
 	private String title;
 
 	private String iconAddress;
+
+	private String content;
+
+	private String address;
+
+	private String phone;
+
+	private String startTime;
+
+	private String endTime;
 
 	private Integer audit;
 
@@ -27,8 +40,9 @@ public class Article {
 	private Date updateTime;
 
 	private Date auditTime;
-
-	private String content;
+	
+	private String showTime;
+	
 
 	public Integer getId() {
 		return id;
@@ -38,20 +52,36 @@ public class Article {
 		this.id = id;
 	}
 
-	public Integer getType() {
-		return type;
+	public Integer getSubType() {
+		return subType;
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setSubType(Integer subType) {
+		this.subType = subType;
 	}
 
-	public String getTypeName() {
-		return typeName;
+	public String getSubTypeName() {
+		return subTypeName;
 	}
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
+	public void setSubTypeName(String subTypeName) {
+		this.subTypeName = subTypeName;
+	}
+
+	public Integer getTopType() {
+		return topType;
+	}
+
+	public void setTopType(Integer topType) {
+		this.topType = topType;
+	}
+
+	public String getTopTypeName() {
+		return topTypeName;
+	}
+
+	public void setTopTypeName(String topTypeName) {
+		this.topTypeName = topTypeName;
 	}
 
 	public String getTitle() {
@@ -59,7 +89,7 @@ public class Article {
 	}
 
 	public void setTitle(String title) {
-		this.title = title == null ? null : title.trim();
+		this.title = title;
 	}
 
 	public String getIconAddress() {
@@ -67,7 +97,53 @@ public class Article {
 	}
 
 	public void setIconAddress(String iconAddress) {
-		this.iconAddress = iconAddress == null ? null : iconAddress.trim();
+		this.iconAddress = iconAddress;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		String[] piles = startTime.split(":");
+		startTime = piles[0] +":"+ piles[1];
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+
+		String[] piles = endTime.split(":");
+		endTime = piles[0] +":"+ piles[1];
+		
+		this.endTime = endTime;
 	}
 
 	public Integer getAudit() {
@@ -102,11 +178,12 @@ public class Article {
 		this.auditTime = auditTime;
 	}
 
-	public String getContent() {
-		return content;
+	public String getShowTime() {
+		return showTime;
 	}
 
-	public void setContent(String content) {
-		this.content = content == null ? null : content.trim();
+	public void setShowTime(String showTime) {
+		this.showTime = showTime;
 	}
+
 }

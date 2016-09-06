@@ -13,11 +13,11 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ethink.msgentry.bean.Article;
-import com.ethink.msgentry.bean.ArticleRootType;
+import com.ethink.msgentry.bean.ArticleTopType;
 import com.ethink.msgentry.bean.ArticleSubType;
 import com.ethink.msgentry.bean.PageInfo;
 import com.ethink.msgentry.dao.ArticleDao;
-import com.ethink.msgentry.dao.ArticleRootTypeDao;
+import com.ethink.msgentry.dao.ArticleTopTypeDao;
 import com.ethink.msgentry.dao.ArticleSubTypeDao;
 import com.ethink.msgentry.util.UploadFileUtil;
 
@@ -27,7 +27,7 @@ public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	private ArticleDao articleDao;
 	@Autowired
-	private ArticleRootTypeDao articleRootTypeDao;
+	private ArticleTopTypeDao articleTopTypeDao;
 	@Autowired
 	private ArticleSubTypeDao articleSubTypeDao;
 
@@ -99,8 +99,8 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<ArticleRootType> getRootType() {
-		List<ArticleRootType> rootTypes = articleRootTypeDao.selectAll();
+	public List<ArticleTopType> getRootType() {
+		List<ArticleTopType> rootTypes = articleTopTypeDao.selectAll();
 		return rootTypes;
 	}
 
@@ -150,5 +150,73 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		int count = articleDao.updateArticle(article);
 		return count == 0 ? false : true;
+	}
+
+	@Override
+	public List<ArticleSubType> getSiblingsById(int id) {
+		List<ArticleSubType>  subTypes= articleSubTypeDao.getSiblingsById(id);
+		return subTypes;
+	}
+
+	@Override
+	public String queryArticleListBySubTypeAndPage(PageInfo pageInfo, String basePath, int subType) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("subType", subType);
+		params.put("sidx", pageInfo.getSidx());
+		params.put("sord", pageInfo.getSord());
+		params.put("endIndex", pageInfo.getEndIndex());
+		params.put("startIndex", pageInfo.getStartIndex());
+			
+		List<Article>  articles= articleDao.getArticleListBySubTypeInPageByParams(params);
+		
+		for (Article article : articles) {
+			// foodArticle.setImgAddress("<img src='" + basePath +
+			// foodArticle.getImgAddress()+"'/>");
+			article.setIconAddress(basePath + article.getIconAddress());
+		}
+		// 查询总记录数
+		int records = articleDao.getRecordsInASubType(subType);
+		//total总共多少页
+		int total = records % pageInfo.getRows() == 0 ? records / pageInfo.getRows() : records / pageInfo.getRows() + 1;
+		int page = pageInfo.getPage();
+		JSONObject json = new JSONObject();
+		json.put("records", records);
+		json.put("total", total);
+		json.put("page", page);
+		json.put("rows", JSON.parseArray(JSON.toJSONStringWithDateFormat(articles, "yyyy:MM:dd")));
+
+		String retdata = JSON.toJSONStringWithDateFormat(json, "yyyy:MM:dd");
+		return retdata;
+	}
+
+	@Override
+	public String queryArticleListByTopTypeAndPage(PageInfo pageInfo, String basePath, int topType) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("topType", topType);
+		params.put("sidx", pageInfo.getSidx());
+		params.put("sord", pageInfo.getSord());
+		params.put("endIndex", pageInfo.getEndIndex());
+		params.put("startIndex", pageInfo.getStartIndex());
+			
+		List<Article>  articles= articleDao.getArticleListByTopTypeInPageByParams(params);
+		
+		for (Article article : articles) {
+			// foodArticle.setImgAddress("<img src='" + basePath +
+			// foodArticle.getImgAddress()+"'/>");
+			article.setIconAddress(basePath + article.getIconAddress());
+		}
+		// 查询总记录数
+		int records = articleDao.getRecordsInATopType(topType);
+		//total总共多少页
+		int total = records % pageInfo.getRows() == 0 ? records / pageInfo.getRows() : records / pageInfo.getRows() + 1;
+		int page = pageInfo.getPage();
+		JSONObject json = new JSONObject();
+		json.put("records", records);
+		json.put("total", total);
+		json.put("page", page);
+		json.put("rows", JSON.parseArray(JSON.toJSONStringWithDateFormat(articles, "yyyy:MM:dd")));
+
+		String retdata = JSON.toJSONStringWithDateFormat(json, "yyyy:MM:dd");
+		return retdata;
 	}
 }

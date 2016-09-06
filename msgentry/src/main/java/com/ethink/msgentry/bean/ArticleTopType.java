@@ -6,7 +6,7 @@ package com.ethink.msgentry.bean;
  * @author liwen
  * @version 1.0
  */
-public class ArticleRootType {
+public class ArticleTopType {
 	
 	private Integer id;
 

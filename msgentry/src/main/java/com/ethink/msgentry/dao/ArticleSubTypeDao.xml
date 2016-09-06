@@ -23,4 +23,9 @@
   <select id="selectByPtype" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   	select * from b_article_sub_type where ptype = #{rootTypeId}
   </select>
+  
+  <!-- 获取兄弟类型 -->
+  <select id="getSiblingsById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select * from b_article_sub_type where ptype = (select ptype from b_article_sub_type where id=#{id})
+  </select>
 </mapper>
