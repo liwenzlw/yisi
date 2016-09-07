@@ -33,7 +33,7 @@ public class UploadFileUtil {
 		
 		// 如果不是图片
 		if (!ConstantUtil.suffixs.contains(contentType)) {
-			return "{\"errorMsg\":\"您选择的不是图片\"}";
+			return "error";
 		}
 		// 保存图片
 		Date now = new Date();
@@ -64,9 +64,10 @@ public class UploadFileUtil {
 			fos.close();
 			inputStream.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		} finally {
 		}
 		// 数据库中保存的文件的路径

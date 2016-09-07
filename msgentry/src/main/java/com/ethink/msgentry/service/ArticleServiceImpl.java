@@ -52,6 +52,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public boolean insertArticle(Article article, MultipartFile imgFile, String realPath) {
 		String iconAddress = UploadFileUtil.saveImage(imgFile, realPath);
+		if("error".equalsIgnoreCase(iconAddress)) {
+			return false;
+		}
 		article.setIconAddress(iconAddress);
 		int count = articleDao.insertArticle(article);
 		return count == 0 ? false : true;

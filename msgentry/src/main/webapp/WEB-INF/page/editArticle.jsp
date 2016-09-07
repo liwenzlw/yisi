@@ -183,9 +183,9 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                 {label: '二级类型', name: 'subType', width: 150, editable: true,edittype:'select',hidden:true,editrules:{edithidden:true},editoptions:{ value:"0:NULL" }},
                 {label: '二级类型', name: 'subTypeName', width: 150},
                 {label: '审核', name: 'audit', width: 80,  edittype:"checkbox",editoptions:{ value:"1:9" }
-	                <%--使用empty运算符检查对象是否为null(空) --%>
-	                ${isAdmin==true? ",editable: true" : ",editable: false"}
-	          	},
+                <%--使用empty运算符检查对象是否为null(空) --%>
+                ${isAdmin==true? ",editable: true" : ",editable: false"}
+          	},
                
                 {
                     label: '图标', name: 'iconAddress', width: 150, editable: true, edittype: 'file',formatter:imageFormat, unformat:imageUnFormat,

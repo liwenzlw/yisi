@@ -91,7 +91,7 @@ public class ArticleControllerRest {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/type/getSubTypeByTopType")
+	@RequestMapping(value = "/type/getSubTypeByTopType", produces = "application/json; charset=utf-8")
 	public List<ArticleSubType> querySubTypeByRootType(int id, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		List<ArticleSubType> subTypes = articleService.getSubTypeByRootType(id);
@@ -120,7 +120,7 @@ public class ArticleControllerRest {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/type/getTopType")
+	@RequestMapping(value = "/type/getTopType", produces = "application/json; charset=utf-8")
 	public List<ArticleTopType> queryRootType(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		List<ArticleTopType> rootTypes = articleService.getRootType();
@@ -234,13 +234,13 @@ public class ArticleControllerRest {
 	 * @param response
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/article/getArticleDetailsById") // ,method=RequestMethod.POST
+	@RequestMapping(value = "/article/getArticleDetailsById", produces = "application/json; charset=utf-8") // ,method=RequestMethod.POST
 	public String getArticleDetailsById(int id, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("text/html;charset=utf-8");
 		
 		Article article = articleService.getArticleDetailsById(id);
-		return JSON.toJSONString(article);
+		String retData = JSON.toJSONString(article);
+		return retData;
 	}
 
 }
