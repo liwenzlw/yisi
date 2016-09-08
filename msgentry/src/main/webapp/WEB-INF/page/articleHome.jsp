@@ -9,11 +9,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>Title</title>
+<title>后台数据录入</title>
 <style>
 body {
 	margin: 0;
 	padding: 0;
+	min-width: 1200px;
 }
 </style>
 </head>
@@ -47,8 +48,7 @@ body {
 <link rel="stylesheet"
 	href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <link rel="stylesheet" type="text/css" media="screen"
-	href="<%=basepath%>vender/jqGrid/css/ui.jqgrid-bootstrap.css" />
-	
+	href="<%=basepath%>vender/jqGrid/css/ui.jqgrid-bootstrap.css" />	
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 
