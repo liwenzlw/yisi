@@ -6,87 +6,59 @@
 	String basepath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ request.getContextPath() + "/";
 %>
-<!-- We support more than 40 localizations -->
+<style>
+	body {
+		min-width: 1200px;
+	}
+	
+	.iconImg {
+		width: 100px;
+	}
+	
+	#jqGrid tbody {
+		cursor: pointer;
+	}
+</style>
+
+<script>
+	var onIFrameLoaded = function (iframe) {
+	    var doc = iframe.contentWindow.document;
+	    var html = doc.body.innerHTML;
+	    if (html != '') {
+    		if(html == 'true') {
+    			//成功后刷新数据
+        		jQuery("#jqGrid").trigger("reloadGrid"); 
+    		} else {
+    			alert(html);
+    		}
+	    }
+	}
+</script>
+<div style="display: inline-block;">
+	<table id="jqGrid"></table>
+	<div id="jqGridPager"></div>
+</div>
+<iframe id='backinfocontainer' name="backinfocontainer"
+	style="display: none" onload='onIFrameLoaded(this)'></iframe>
+
+
 <script type="text/ecmascript"
 	src="<%=basepath%>vender/jqGrid/js/i18n/grid.locale-en.js"></script>
-<!-- This is the Javascript file of jqGrid -->
 <script type="text/ecmascript"
 	src="<%=basepath%>vender/jqGrid/js/jquery.jqGrid.min.js"></script>
-<!-- The link to the CSS that the grid needs -->
-
-
+<script>
+	window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
+</script>
+<script type="text/javascript"
+	src="<%=basepath%>vender/ueditor/ueditor.config.js"></script>
+<script type="text/javascript"
+	src="<%=basepath%>vender/ueditor/ueditor.all.js"></script>
+	
 <script>
     $.jgrid.defaults.width = 1100;
     $.jgrid.defaults.responsive = true;
     $.jgrid.defaults.styleUI = 'Bootstrap';
 </script>
-
-
-
-
-<div style="display: inline-block;">
-	<table id="jqGrid"></table>
-	<div id="jqGridPager"></div>
-</div>
-<!-- jqgrid start -->
-
-<div id="ueditorContainer" style="display: none">
-	<!-- 加载编辑器的容器 -->
-	<script id="container" name="content" type="text/plain">
-这里写你的初始化内容
-			</script>
-</div>
-
-<script>
-function onIFrameLoaded(iframe) {
-    var doc = iframe.contentWindow.document;
-    var html = doc.body.innerHTML;
-    if (html != '') {
-    		if(html == 'true') {
-    			console.group('onIFrameLoaded');
-    			$('#cData').trigger('click');
-        		jQuery("#jqGrid").trigger("reloadGrid"); 
-        		console.groupEnd();
-    		} else {
-    			alert(html);
-    		}
-    }
-}
-</script>
-<iframe id='backinfocontainer' name="backinfocontainer"
-	style="display: none" onload='onIFrameLoaded(this)'></iframe>
-
-
-
-<!--富文本编辑器 start -->
-<script>
-window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
-</script>
-<!-- 配置文件 -->
-<script type="text/javascript"
-	src="<%=basepath%>vender/ueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 -->
-<script type="text/javascript"
-	src="<%=basepath%>vender/ueditor/ueditor.all.js"></script>
-<!-- 实例化编辑器 -->
-<script type="text/javascript">
-	var editor = UE.getEditor('container', {
-		enableAutoSave : false,
-		enableAutoSave : false,
-		autoSyncData : false,
-		enableContextMenu : false,
-		isShow : true,
-		initialFrameWidth:'100%'
-	});
-	console.log(editor);
-</script>
-<!--富文本编辑器 end -->
-
-<style>
-.iconImg {
-	width: 100px;
-}
-</style>
 
 <!-- 日历控件 start -->
 <link rel="stylesheet" type="text/css" media="screen"
@@ -108,34 +80,62 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
 			return $('img', cell).attr('src');
 		};
 		
-		    //编辑Form框显示后
-		 var initSubType = function (formid) {
+		//编辑Form框显示后
+		var initSubTypeAndRichContent = function (formid) {
 		    	
-		    	var rowId = $("#id",formid).val();
-		    	var topType = jQuery("#jqGrid").jqGrid('getCell', rowId,'topType');
-		    	var subType = jQuery("#jqGrid").jqGrid('getCell', rowId,'subType');
+		    var rowId = $("#id",formid).val();
+		    var topType = jQuery("#jqGrid").jqGrid('getCell', rowId,'topType');
+		    var subType = jQuery("#jqGrid").jqGrid('getCell', rowId,'subType');
 		    	
-		    	//编辑模块加载二级类型下拉框
-		    	$.ajax({
-					url:"<%=basepath%>type/getSubTypeByTopType",
-					type: "POST",
-					data:{
-						id:topType
-					},
-					dataType: "json",
-					success : function(data){
-						var subSelectorOptions = "";
-						if($.isEmptyObject(data)) {
-							subSelectorOptions = "<option value='0'>NULL</option>";
-						} else {
-							$.each(data,function(i,n) {
-		        				subSelectorOptions += "<option value='"+n.id+"'>"+n.name+"</option>";
-		        			});
-						}
-		    			$("#subType").html(subSelectorOptions).val(subType);
-					},
-				});
-		    };
+	    	//编辑模块加载二级类型下拉框
+	    	$.ajax({
+				url:"<%=basepath%>type/getSubTypeByTopType",
+				type: "POST",
+				data:{
+					id:topType
+				},
+				dataType: "json",
+				success : function(data){
+					var subSelectorOptions = "";
+					if($.isEmptyObject(data)) {
+						subSelectorOptions = "<option value='0'>NULL</option>";
+					} else {
+						$.each(data,function(i,n) {
+	        				subSelectorOptions += "<option value='"+n.id+"'>"+n.name+"</option>";
+	        			});
+					}
+	    			$("#subType").html(subSelectorOptions).val(subType);
+				},
+			});
+	    	//初始化富文本编辑框
+	    	$.ajax({
+				url:"<%=basepath%>article/getContentById",
+				type: "POST",
+				data:{
+					id:$("#id",formid).val()
+				},
+				dataType: "html",
+				success : function(data){
+					/* 加载编辑器的容器 */
+					//初始化富文本框
+                  		$("#content",formid).after("<input id='hideContent' type='textarea' name='content' style='display:none'/>");
+                  		$("#content",formid).replaceWith('<div><script id="ueditorContainer" name="content" type="text/plain"><\/script></div>');
+               		var editor = UE.getEditor('ueditorContainer', {
+               			enableAutoSave : false,
+               			enableAutoSave : false,
+               			autoSyncData : false,
+               			enableContextMenu : false,
+               			isShow : true,
+               			elementPathEnabled :false,
+               			wordCount :false,
+               			initialFrameWidth:'98%'
+               		});
+               		editor.ready(function() {
+               			editor.setContent(data);
+              			});
+				}
+			});
+		};
 		  
 		    
         $("#jqGrid").jqGrid({
@@ -162,51 +162,45 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                 			selector += "</select>"
                 			return selector;
                 		},
-                		dataInit : function (elem) { 
-                        	console.group("dataInit");
-                        	console.log(elem);
-                        	console.groupEnd();
-                        	
-                    	},
-                		 dataEvents: [ 
-	                		              { type: 'change', fn: function(e) { 
-	                		            	  	var rowId = $(this).parents('tbody').find('#id').val();
-	                		  		    		var topType = $(this).val();
-	                		  		    		var subType = jQuery("#jqGrid").jqGrid('getCell', rowId,'subType');
-	                		  		    		
-	                		  		    		//编辑模块加载二级类型下拉框
-	                		  			    	$.ajax({
-	                		  						url:"<%=basepath%>type/getSubTypeByTopType",
-	                		  						type: "POST",
-	                		  						data:{
-	                		  							id:topType
-	                		  						},
-	                		  						dataType: "json",
-	                		  						success : function(data){
-	                		  							var subSelectorOptions = "";
-	                		  							if($.isEmptyObject(data)) {
-	                		  								subSelectorOptions = "<option value='0'>NULL</option>";
-	                		  							} else {
-	                		  								$.each(data,function(i,n) {
-	                		  			        				subSelectorOptions += "<option value='"+n.id+"'>"+n.name+"</option>";
-	                		  			        			});
-	                		  							}
-	                		  							$("#subType").html(subSelectorOptions);
-	                		  						},
-	                		  					});
-	                		            	  } 
-	                		              }
-                		              ] 
+                		dataEvents: [ 
+                		              { type: 'change', fn: function(e) { 
+                		            	  	var rowId = $(this).parents('tbody').find('#id').val();
+                		  		    		var topType = $(this).val();
+                		  		    		var subType = jQuery("#jqGrid").jqGrid('getCell', rowId,'subType');
+                		  		    		
+                		  		    		//编辑模块加载二级类型下拉框
+                		  			    	$.ajax({
+                		  						url:"<%=basepath%>type/getSubTypeByTopType",
+                		  						type: "POST",
+                		  						data:{
+                		  							id:topType
+                		  						},
+                		  						dataType: "json",
+                		  						success : function(data){
+                		  							var subSelectorOptions = "";
+                		  							if($.isEmptyObject(data)) {
+                		  								subSelectorOptions = "<option value='0'>NULL</option>";
+                		  							} else {
+                		  								$.each(data,function(i,n) {
+                		  			        				subSelectorOptions += "<option value='"+n.id+"'>"+n.name+"</option>";
+                		  			        			});
+                		  							}
+                		  							$("#subType").html(subSelectorOptions);
+                		  						},
+                		  					});
+                		            	  } 
+	                		           }
+                		            ] 
                 	}
                 },
                 {label: '二级类型', name: 'subType', width: 150, editable: true,edittype:'select',hidden:true,editrules:{edithidden:true,required:true},editoptions:{ value:"0:NULL" }},
                 {label: '二级类型', name: 'subTypeName', width: 150},
-                {label: '审核', name: 'audit', width: 80,  edittype:"checkbox",editoptions:{ value:"1:9" }
-                /* 使用empty运算符检查对象是否为null(空) */
-                ${isAdmin==true? ",editable: true" : ",editable: false"}
-          	},
+                {label: '审核', name: 'audit', width: 80,  edittype:"checkbox",editoptions:{ value:"1:0" }
+	                /* 使用empty运算符检查对象是否为null(空) */
+	                ${isAdmin==true? ",editable: true" : ",editable: false"}
+          		},
                
-          	{
+          		{
                     label: '图标', name: 'iconAddress', width: 150, editable: true, edittype: 'file',formatter:imageFormat, unformat:imageUnFormat,
                     editoptions: { 
                     	
@@ -216,10 +210,6 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                     	},
                     	 dataEvents: [ 
                     	              { type: 'change', data: {}, fn: function(e) { 
-                    	            	 		 //$('#editImg').prop('src',$(this).val());
-                    	            	 		 console.group("image onchange");
-                    	            	 		 console.log($(this).val());
-                    	            	 		 console.groupEnd();
                     	            	 		    // 如果浏览器不支持FileReader，则不处理
                     	            	 		    if (!window.FileReader) return;
                     	            	 		    var files = e.target.files;
@@ -239,7 +229,7 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                     	            	 		    }
 
                     	            	 		}
-                    	              		}
+                    	              	}
                     	              ] 
                     }
                 },
@@ -248,7 +238,14 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                         dataInit: function (element) {
                         	$(element).addClass('form-control').prop('readonly',true);
                         	$(element).datetimepicker({
-                        		language:'zh-CN',format: 'hh:ii',startView:1,maxView:1,autoclose:true,showMeridian:"hour"
+                        		language:'zh-CN',
+                        		format: 'hh:ii',
+                        		startView:1,
+                        		maxView:1,
+                        		autoclose:true,
+                        		showMeridian:"hour",
+                        		startDate: new Date().setHours(0,0,0),
+                        		keyboardNavigation:false
                         	});
                         }
                     }
@@ -258,7 +255,14 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                         dataInit: function (element) {
                         	$(element).addClass('form-control').prop('readonly',true);
                         	$(element).datetimepicker({
-                        		language:'zh-CN',format:'hh:ii',startView:1,maxView:1,autoclose:true,showMeridian:"hour"
+                        		language:'zh-CN',
+                        		format:'hh:ii',
+                        		startView:1,
+                        		maxView:1,
+                        		autoclose:true,
+                        		showMeridian:"hour",
+                        		startDate: new Date().setHours(0,0,0),
+                        		keyboardNavigation:false
                         	});
                         }
                     }
@@ -268,7 +272,14 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                         dataInit: function (element) {
                         	$(element).addClass('form-control').prop('readonly',true);
                         	$(element).datetimepicker({
-                        		language:'zh-CN',format: 'yyyy-mm-dd',startView:3,todayBtn:"linked",maxView:3,minView:2,autoclose:true,showMeridian:"day"
+                        		language:'zh-CN',
+                        		format: 'yyyy-mm-dd',
+                        		startView:3,
+                        		todayBtn:"linked",
+                        		maxView:3,
+                        		minView:2,
+                        		autoclose:true,
+                        		showMeridian:"day"
                         	});
                         }
                     }
@@ -278,21 +289,12 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                 {label: '审核时间', name: 'auditTime', width: 150},
                 {label: '上传时间', name: 'uploadTime', width: 150},
                 {label: '最近修改时间', name: 'updateTime', width: 150},
-                {label: '文章内容', name: 'content', width: 150, hidden:true,editable: true,editrules:{edithidden:true},editoptions: { 
-                	
-                	dataInit : function (elem) { 
-                    	console.group("elem");
-                    	console.log(elem);
-                    	$(elem).after("<input id='hideContent' type='textarea' name='content' style='display:none'/>");
-                    	$(elem).replaceWith($('#ueditorContainer').css('display','block'));
-                    	console.groupEnd();
-                    	
-                	},
-                }}  
+                {label: '文章内容', name: 'content', width: 150, hidden:true,editable: true,editrules:{edithidden:true}}  
             ],
             sortname: 'id',
             sortorder: 'asc',
             viewrecords: true,
+            width:1100,
             height: 'auto',
             rowNum: 20,
             pager: "#jqGridPager"
@@ -305,25 +307,25 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                     add: true,
                     del: true,
                     search: false,
-                    refresh: false,
+                    refresh: true,
                     view: false,
                     position: "left",
                     cloneToTop: false
                 },
                 // options for the Edit Dialog
                 {
-                    editCaption: "The Edit Dialog",
-                    width:800,
+                    editCaption: "编辑对话框",
+                    width:600,
                     jqModal:false,
                     drag:true,
+                    recreateForm:true,
+                    reloadAfterSubmit:false,
+                    
                     url:"<%=basepath%>#",
-                    recreateForm: true,
-                    checkOnSubmit: true,
-                    closeAfterEdit:true,
                     beforeSubmit : function(postdata, formid) { 
                     	//阻止默认提交方式，使用表单提交
                     	postdata = {};
-                    	$('#hideContent').val(editor.getContent());
+                    	$('#hideContent').val(UE.getEditor('ueditorContainer').getContent());
                     	$(formid).prop('enctype','multipart/form-data').prop('method','post').prop('target','backinfocontainer').removeAttr('onSubmit').prop('action','<%=basepath%>article/edit').submit();
                     	return[true,""]; 
                     },
@@ -352,13 +354,26 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
 	  							$("#subType").html(subSelectorOptions).val(subType);
 	  						},
 	  					});
+	  		    		//初始化富文本内容区
+	  			    	$.ajax({
+	  						url:"<%=basepath%>article/getContentById",
+	  						type: "POST",
+	  						data:{
+	  							id:$("#id",formid).val()
+	  						},
+	  						dataType: "html",
+	  						success : function(data){
+	  							//初始化富文本框
+	  	                		var editor = UE.getEditor('ueditorContainer');
+	  	                		editor.ready(function() {
+	  	                			editor.setContent(data);
+	  	               			});
+	  						}
+	  					});
                     },
-                    afterShowForm:initSubType,
+                    afterShowForm:initSubTypeAndRichContent,
                     onClose : function(){
-                    	//情况ueditor数据
-                    	//将ueditor保存到body中
-                    	//debugger;
-                    	$('#ueditorContainer').css('display','none').appendTo($(document.body));
+                    	UE.getEditor('ueditorContainer').destroy();
                     	return true;
                     },
                     errorTextFormat: function (data) {
@@ -367,18 +382,19 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
                 },
                 // options for the Add Dialog
                 {
-                	editCaption: "The Add Dialog",
-                    width:800,
+                	editCaption: "添加对话框",
+                	width:600,
                     jqModal:false,
                     drag:true,
+                    recreateForm:true,
                     url:"<%=basepath%>#",
-                    recreateForm: true,
-                    checkOnSubmit: true,
-                    closeAfterEdit:true,
+                    reloadAfterSubmit:false,
+                    clearAfterAdd:false,
+                    addedrow:"first",
                     beforeSubmit : function(postdata, formid) { 
-                    	postdata = {};
                     	//阻止默认提交方式，使用表单提交
-                    	$('#hideContent').val(editor.getContent());
+                    	postdata = {};
+                    	$('#hideContent').val(UE.getEditor('ueditorContainer').getContent());
                     	$(formid).prop('enctype','multipart/form-data').prop('method','post').prop('target','backinfocontainer').removeAttr('onSubmit').prop('action','<%=basepath%>article/add').submit();
                     	return[true,""]; 
                     },
@@ -404,11 +420,23 @@ window.UEDITOR_HOME_URL = "<%=basepath%>vender/ueditor/";
         		    			$("#subType").html(subSelectorOptions);
         					},
         				});
+        		    	//初始化富文本框
+                   		$("#content",formid).after("<input id='hideContent' type='textarea' name='content' style='display:none'/>");
+                   		$("#content",formid).replaceWith('<div><script id="ueditorContainer" name="content" type="text/plain"><\/script></div>');
+                		var editor = UE.getEditor('ueditorContainer', {
+                			enableAutoSave : false,
+                			enableAutoSave : false,
+                			autoSyncData : false,
+                			enableContextMenu : false,
+                			isShow : true,
+                			elementPathEnabled :false,
+                			wordCount :false,
+                			initialFrameWidth:'98%'
+                		});
                     },
                     onClose : function(){
-                    	//将ueditor保存到body中
-                    	//debugger;
-                    	$('#ueditorContainer').css('display','none').appendTo($(document.body));
+                    	debugger;
+                    	UE.getEditor('ueditorContainer').destroy();
                     	return true;
                     },
                     errorTextFormat: function (data) {
