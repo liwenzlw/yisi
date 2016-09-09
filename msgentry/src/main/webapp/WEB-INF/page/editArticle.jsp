@@ -280,6 +280,7 @@
                         		minView:2,
                         		autoclose:true,
                         		showMeridian:"day"
+                        		
                         	});
                         }
                     }
