@@ -18,27 +18,27 @@ body {
 }
 </style>
 </head>
-<body class="container">
-	<div class="row">
-		<div class="panel panel-default" style="margin-top: 10px">
-			<div class="panel-heading">
-				<!-- Nav tabs -->
-				<ul class="nav nav-tabs" id="maintab">
-					<li><a href="#editArticle"
-						onclick='showPage("editArticle","<%=basepath%>getEidtPage")'>编辑数据</a></li>
-					<li><a href="#settings" onclick='showPage("settings","")'>用户中心</a></li>
-				</ul>
-			</div>
-			<div class="panel-body">
-				<!-- Tab panes -->
-				<div class="tab-content">
-					<div class="tab-pane" id="editArticle" style="text-align: center;"></div>
-					<div class="tab-pane" id="settings"></div>
-				</div>
+<body>
+<div id='modalShade' data-count='0' style='display:none;background:#ccc;opacity:.5;position:absolute;width:100%;z-index:10000;height:100%;padding-top:20%;text-align:center'>
+	<p>数据加载中...</p>
+</div>
+	<div class="panel panel-default" style="margin-top: 10px">
+		<div class="panel-heading">
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" id="maintab">
+				<li><a href="#editArticle"
+					onclick='showPage("editArticle","<%=basepath%>getEidtPage")'>编辑数据</a></li>
+				<li><a href="#settings" onclick='showPage("settings","")'>用户中心</a></li>
+			</ul>
+		</div>
+		<div class="panel-body">
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane" id="editArticle" style="text-align: center;"></div>
+				<div class="tab-pane" id="settings"></div>
 			</div>
 		</div>
 	</div>
-
 </body>
 <!-- 新 Bootstrap 核心 CSS 文件 -->
 <link rel="stylesheet"
@@ -48,13 +48,13 @@ body {
 <link rel="stylesheet"
 	href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <link rel="stylesheet" type="text/css" media="screen"
-	href="<%=basepath%>vender/jqGrid/css/ui.jqgrid-bootstrap.css" />	
+	href="<%=basepath%>vender/jqGrid/css/ui.jqgrid-bootstrap.css" />
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script language="javascript">
+<script>
 	//var loadimg = "./img/load2.gif"; // 加载时的loading图片
 
 	function showPage(tabId, url) {

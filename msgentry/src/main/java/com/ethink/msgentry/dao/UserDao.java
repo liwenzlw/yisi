@@ -5,4 +5,6 @@ import com.ethink.msgentry.bean.User;
 public interface UserDao {
 
 	User getUserInfoByUsername(String username);
+
+	String getPermission(String username);
 }

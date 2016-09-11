@@ -3,16 +3,13 @@
 <mapper namespace="com.ethink.msgentry.dao.UserDao">
 	<resultMap id="BaseResultMap" type="User">
 		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
 		<result column="password" property="password" jdbcType="VARCHAR" />
-		<result column="role" property="role" jdbcType="INTEGER" />
 	</resultMap>
-	<sql id="Base_Column_List">
-		id, name, password, role
-	</sql>
 	<select id="getUserInfoByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List"></include>
-		from b_user where name=#{username}
+		select * from b_users where username=#{username}
+	</select>
+	<select id="getPermission" parameterType="java.lang.String" resultType="java.lang.String">
+		select permission from b_roles_permissions where role_name=(select role_name from b_user_roles where username=#{username})
 	</select>
 </mapper>

@@ -84,7 +84,7 @@ public class ArticleServiceImpl implements ArticleService {
 		json.put("records", records);
 		json.put("total", total);
 		json.put("page", page);
-		json.put("rows", JSON.parseArray(JSON.toJSONStringWithDateFormat(articles, "yyyy:MM:dd HH:mm:ss")));
+		json.put("rows", articles);
 
 		String retdata = JSON.toJSONStringWithDateFormat(json, "yyyy:MM:dd HH:mm:ss");
 		return retdata;

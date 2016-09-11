@@ -42,7 +42,18 @@ public class Article {
 	private Date auditTime;
 	
 	private String showTime;
+	private String auditName;
+	private String updatorName;
+	private String inserterName;
 	
+
+	public String getInserterName() {
+		return inserterName;
+	}
+
+	public void setInserterName(String inserterName) {
+		this.inserterName = inserterName;
+	}
 
 	public Integer getId() {
 		return id;
@@ -58,6 +69,22 @@ public class Article {
 
 	public void setSubType(Integer subType) {
 		this.subType = subType;
+	}
+
+	public String getAuditName() {
+		return auditName;
+	}
+
+	public void setAuditName(String auditName) {
+		this.auditName = auditName;
+	}
+
+	public String getUpdatorName() {
+		return updatorName;
+	}
+
+	public void setUpdatorName(String updatorName) {
+		this.updatorName = updatorName;
 	}
 
 	public String getSubTypeName() {

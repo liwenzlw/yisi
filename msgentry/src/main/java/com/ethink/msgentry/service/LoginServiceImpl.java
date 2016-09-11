@@ -20,8 +20,11 @@ public class LoginServiceImpl implements LoginService{
 		User user = userDao.getUserInfoByUsername(username);
 		
 		if(null != user && user.getPassword().equals(password)) {
-			if(user.getRole().equals(1)) {
-				request.getSession().setAttribute("isAdmin", true);
+			//登录成功后将用户保存在session中
+			request.getSession().setAttribute("user", user.getUsername());
+			String permission = userDao.getPermission(username);
+			if("msgentry:autid:update".equals(permission)) {
+				request.getSession().setAttribute("canAudit", true);
 			}
 			request.getSession().setAttribute("isLogin", true);
 			return true;

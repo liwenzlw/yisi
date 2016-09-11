@@ -50,7 +50,8 @@ public class ArticleControllerRest {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		// 更新修改时间
-		article.setUpdateTime(new Date());
+		article.setUploadTime(new Date());
+		article.setInserterName((String)request.getSession().getAttribute("user"));
 		Boolean result = false;
 		// 上传图片，并将文章插入到数据库
 		result = articleService.insertArticle(article, imgFile, realPath);
@@ -75,6 +76,10 @@ public class ArticleControllerRest {
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		// 更新修改时间
 		article.setUpdateTime(new Date());
+		if((Boolean)request.getSession().getAttribute("canAudit")) {
+			article.setAuditName((String)request.getSession().getAttribute("user"));
+		}
+		article.setUpdatorName((String)request.getSession().getAttribute("user"));
 		Boolean result = false;
 		// 修改数据库，和图片
 		if (article.getAudit() != null) {

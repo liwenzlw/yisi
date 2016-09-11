@@ -9,11 +9,13 @@ package com.ethink.msgentry.bean;
 public class User {
 	private Integer id;
 
-	private String name;
+	private String username;
 
 	private String password;
 
-	private Integer role;
+	private String roleName;
+	
+	private String permission;
 
 	public Integer getId() {
 		return id;
@@ -23,12 +25,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name == null ? null : name.trim();
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -36,14 +38,23 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = password == null ? null : password.trim();
+		this.password = password;
 	}
 
-	public Integer getRole() {
-		return role;
+	public String getRoleName() {
+		return roleName;
 	}
 
-	public void setRole(Integer role) {
-		this.role = role;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
+
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
+	
 }

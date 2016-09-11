@@ -19,7 +19,7 @@ public class LoginController {
 	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public String login(String username,String password,HttpServletRequest request) {
 		
-		request.getSession().setAttribute("isAdmin", false);
+		request.getSession().setAttribute("canAudit", false);
 		//通过用户名去数据库查找用户信息
 		boolean result = loginService.login(username,password,request);
 		if(result) {
