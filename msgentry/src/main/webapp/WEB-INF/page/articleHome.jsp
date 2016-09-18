@@ -19,6 +19,9 @@ body {
 </style>
 </head>
 <body>
+<div id='showSubmitDiv' style='display:none;background:#ccc;opacity:.5;position:absolute;width:100%;z-index:10001;height:100%;padding-top:20%;text-align:center'>
+	<p>数据加载中...</p>
+</div>
 <div id='modalShade' data-count='0' style='display:none;background:#ccc;opacity:.5;position:absolute;width:100%;z-index:10000;height:100%;padding-top:20%;text-align:center'>
 	<p>数据加载中...</p>
 </div>
