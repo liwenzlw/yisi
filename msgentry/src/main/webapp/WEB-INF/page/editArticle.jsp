@@ -262,7 +262,7 @@ var showSubmitDiv = function(event){
                                                       $(this).replaceWith($(this).clone(true,true).val(''));
                                                       document.getElementById('editImg').src = '';
                                                       return;
-                                                  } else if (file.size > 60000) {//如果文件的大于60KB禁止用户上传
+                                                  } else if (file.size > 600000) {//如果文件的大于600KB禁止用户上传
                                                     alert('图片过大，请重新选择');
                                                     $(this).replaceWith($(this).clone(true,true).val(''));
                                                     document.getElementById('editImg').src = '';
