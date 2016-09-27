@@ -97,7 +97,7 @@
 		select id,title,icon_address,show_time
 		from b_article
 		where sub_type =
-		${subType}
+		${subType} and audit=1
 		order by
 		<include refid="order_sql"></include>
 		limit
@@ -110,7 +110,7 @@
 		select id,title,icon_address,show_time
 		from b_article
 		where top_type =
-		${topType}
+		${topType} and audit=1
 		order by
 		<include refid="order_sql"></include>
 		limit
@@ -127,7 +127,7 @@
 		where id = #{id,jdbcType=INTEGER}
 	</select>
 
-	<!-- 获取所有的文字的总数 -->
+	<!-- 获取所有的文章的总数 -->
 	<select id="getRecords" resultType="java.lang.Integer">
 		select count(1) from
 		b_article;
@@ -136,13 +136,13 @@
 	<select id="getRecordsInASubType" resultType="java.lang.Integer">
 		select count(1)
 		from
-		b_article where sub_type=#{subType};
+		b_article where sub_type=#{subType} and audit=1;
 	</select>
 	<!-- 查询该顶级分类的总文章数 -->
 	<select id="getRecordsInATopType" resultType="java.lang.Integer">
 		select count(1)
 		from
-		b_article where top_type=#{topType};
+		b_article where top_type=#{topType} and audit=1;
 	</select>
 
 	<!-- 通过id获取文章内容 -->

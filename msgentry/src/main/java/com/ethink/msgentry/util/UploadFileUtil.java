@@ -1,5 +1,7 @@
 package com.ethink.msgentry.util;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,7 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
  * 上传文件工具类
@@ -32,7 +39,7 @@ public class UploadFileUtil {
 		String contentType = imgFile.getContentType();
 		
 		// 如果不是图片
-		if (!ConstantUtil.suffixs.contains(contentType)) {
+		if (!ConstantUtil.SUFFIXS.contains(contentType)) {
 			return "error";
 		}
 		// 保存图片
@@ -41,9 +48,9 @@ public class UploadFileUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String dir = sdf.format(now);
 		String fileName = String.valueOf(now.getTime())
-				+ String.format("%06d", (int) (new Random().nextDouble() * 1000000)) + "." + contentType.split("/")[1];
+				+ String.format("%06d", (int) (new Random().nextDouble() * 1000000)) + ".jpg" ;
 		// 图片的全路径
-		String fullPath = realPath + "ueditor" + File.separator + "upload" + File.separator + "image" + File.separator
+		String fullPath = realPath + "../project_resources/ueditor" + File.separator + "upload" + File.separator + "image" + File.separator
 				+ dir + File.separator + fileName;
 		File image = new File(fullPath);
 		if (!image.getParentFile().exists()) {
@@ -56,10 +63,20 @@ public class UploadFileUtil {
 			fos = new FileOutputStream(image);
 
 			inputStream = imgFile.getInputStream();
-			int length = inputStream.available();
-			byte[] buf = new byte[length];
-			inputStream.read(buf, 0, length);
-			fos.write(buf);
+			
+			Image img = ImageIO.read(inputStream);
+			int width = img.getWidth(null);
+			int height = img.getHeight(null);
+			// SCALE_SMOOTH 的缩略算法 生成缩略图片的平滑度的 优先级比速度高 生成的图片质量比较好 但速度慢
+			BufferedImage imageBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+			imageBuffer.getGraphics().drawImage(img, 0, 0, width, height, null); // 绘制缩小后的图
+			// 可以正常实现bmp、png、gif转jpg
+			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fos);
+			encoder.encode(imageBuffer); // JPEG编码
+//			int length = inputStream.available();
+//			byte[] buf = new byte[length];
+//			inputStream.read(buf, 0, length);
+//			fos.write(buf);
 			fos.flush();
 			fos.close();
 			inputStream.close();
@@ -71,7 +88,7 @@ public class UploadFileUtil {
 		} finally {
 		}
 		// 数据库中保存的文件的路径
-		String savePath = "ueditor" + File.separator + "upload" + File.separator + "image" + File.separator + dir
+		String savePath = "../project_resources/ueditor" + File.separator + "upload" + File.separator + "image" + File.separator + dir
 				+ File.separator + fileName;
 		return savePath;
 	}

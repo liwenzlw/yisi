@@ -10,29 +10,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ethink.msgentry.service.LoginService;
 
+/**
+ * 
+ * @author liwen
+ * @version 1.0
+ */
 @Controller
 public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
-	
-	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String login(String username,String password,HttpServletRequest request) {
-		
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String login(String username, String password, HttpServletRequest request) {
+
 		request.getSession().setAttribute("canAudit", false);
-		//通过用户名去数据库查找用户信息
-		boolean result = loginService.login(username,password,request);
-		if(result) {
+		// 通过用户名去数据库查找用户信息
+		boolean result = loginService.login(username, password, request);
+		if (result) {
 			return "articleHome";
 		}
 		return "forward:login.jsp";
 	}
-	
-	@RequestMapping(value="/getEidtPage")
+
+	@RequestMapping(value = "/getEidtPage")
 	public String login(HttpServletRequest request) {
-		
-		//通过用户名去数据库查找用户信息
-		if((Boolean)request.getSession().getAttribute("isLogin")) {
+
+		// 通过用户名去数据库查找用户信息
+		if ((Boolean) request.getSession().getAttribute("isLogin")) {
 			return "editArticle";
 		}
 		return "forward:login.jsp";

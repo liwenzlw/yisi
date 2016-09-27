@@ -25,6 +25,11 @@ import com.ethink.msgentry.bean.ArticleTopType;
 import com.ethink.msgentry.bean.PageInfo;
 import com.ethink.msgentry.service.ArticleService;
 
+/**
+ * 文章录入控制
+ * @author liwen
+ * @version 1.0
+ */
 @Controller
 public class ArticleControllerRest {
 
@@ -51,7 +56,7 @@ public class ArticleControllerRest {
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		// 更新修改时间
 		article.setUploadTime(new Date());
-		article.setInserterName((String)request.getSession().getAttribute("user"));
+		article.setInserterName((String) request.getSession().getAttribute("user"));
 		Boolean result = false;
 		// 上传图片，并将文章插入到数据库
 		result = articleService.insertArticle(article, imgFile, realPath);
@@ -76,10 +81,10 @@ public class ArticleControllerRest {
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		// 更新修改时间
 		article.setUpdateTime(new Date());
-		if((Boolean)request.getSession().getAttribute("canAudit")) {
-			article.setAuditName((String)request.getSession().getAttribute("user"));
+		if ((Boolean) request.getSession().getAttribute("canAudit")) {
+			article.setAuditName((String) request.getSession().getAttribute("user"));
 		}
-		article.setUpdatorName((String)request.getSession().getAttribute("user"));
+		article.setUpdatorName((String) request.getSession().getAttribute("user"));
 		Boolean result = false;
 		// 修改数据库，和图片
 		if (article.getAudit() != null) {
@@ -181,7 +186,7 @@ public class ArticleControllerRest {
 	public void getContentById(int id, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("text/html;charset=utf-8");
-		
+
 		String articleContent = articleService.getContentById(id);
 		PrintWriter out = null;
 		try {
@@ -197,7 +202,7 @@ public class ArticleControllerRest {
 			out.close();
 		}
 	}
-	
+
 	/**
 	 * 根据二级类型和分页信息查询文章列表数据（h5接口）
 	 * 
@@ -206,7 +211,7 @@ public class ArticleControllerRest {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/article/queryArticleListBySubTypeAndPage", produces = "application/json; charset=utf-8")
-	public String queryArticleListBySubTypeAndPage( int subType, PageInfo pageInfo, HttpServletRequest request,
+	public String queryArticleListBySubTypeAndPage(int subType, PageInfo pageInfo, HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
@@ -214,6 +219,7 @@ public class ArticleControllerRest {
 		String data = articleService.queryArticleListBySubTypeAndPage(pageInfo, basePath, subType);
 		return data;
 	}
+
 	/**
 	 * 根据顶级类型和分页信息查询文章列表数据（h5接口）
 	 * 
@@ -222,15 +228,15 @@ public class ArticleControllerRest {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/article/queryArticleListByTopTypeAndPage", produces = "application/json; charset=utf-8")
-	public String queryArticleListByTopTypeAndPage( int topType, PageInfo pageInfo, HttpServletRequest request,
+	public String queryArticleListByTopTypeAndPage(int topType, PageInfo pageInfo, HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-		+ request.getContextPath() + "/";
+				+ request.getContextPath() + "/";
 		String data = articleService.queryArticleListByTopTypeAndPage(pageInfo, basePath, topType);
 		return data;
 	}
-	
+
 	/**
 	 * 通过文章的主键获取文章的详细信息
 	 * 
@@ -242,7 +248,7 @@ public class ArticleControllerRest {
 	@RequestMapping(value = "/article/getArticleDetailsById", produces = "application/json; charset=utf-8") // ,method=RequestMethod.POST
 	public String getArticleDetailsById(int id, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		
+
 		Article article = articleService.getArticleDetailsById(id);
 		String retData = JSON.toJSONString(article);
 		return retData;

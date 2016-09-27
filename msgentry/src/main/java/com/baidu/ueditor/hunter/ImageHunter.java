@@ -76,7 +76,8 @@ public class ImageHunter {
 				return new BaseState( false, AppInfo.CONNECTION_ERROR );
 			}
 			String contentType = connection.getContentType();
-			suffix = MIMEType.getSuffix( contentType.substring(0, contentType.lastIndexOf(";")) );
+			int endIndex = contentType.lastIndexOf(";");
+			suffix = endIndex == -1 ? MIMEType.getSuffix( contentType) : MIMEType.getSuffix( contentType.substring(0, endIndex) );
 			
 			if ( !validFileType( suffix ) ) {
 				return new BaseState( false, AppInfo.NOT_ALLOW_FILE_TYPE );
